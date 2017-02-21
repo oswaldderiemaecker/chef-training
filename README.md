@@ -16,7 +16,7 @@ vagrant up
 
 Once all vagrants has started.
 
-The Vagrant CHEF_SERVER_INSTALL install chef server, create an organization **myorganization**, one admin and two developers user account with admin rights, the one client user.
+The Vagrant [CHEF_SERVER_INSTALL](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L29) install chef server, create an organization **myorganization**, one admin and two developers user account with admin rights, the one client user.
 
 #### Connecting to the developers vagrant to set your git chef repository
 
@@ -37,7 +37,7 @@ scp id_dsa vagrant@developer1.vagrant.local:/home/vagrant/.ssh/id_rsa
 vagrant ssh developer1
 ```
 
-The Vagrant CHEF_WORKSTATION_INSTALL has generated the base chef repository available in /home/vagrant/chef-repo-training.
+The Vagrant [CHEF_WORKSTATION_INSTALL](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L57) has generated the base chef repository available in /home/vagrant/chef-repo-training.
 
 ```
 cd /home/vagrant/chef-repo-training
@@ -64,8 +64,8 @@ knife spork environment create development
 vagrant ssh developer2
 ```
 
-The Vagrant CHEF_DK_INSTALL install the Chef Development Kit.
-The Vagrant CHEF_WORKSTATION_INSTALL has generated the base chef repository available in /home/vagrant/chef-repo-training.
+The Vagrant [CHEF_DK_INSTALL](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L17) install the Chef Development Kit.
+The Vagrant [CHEF_WORKSTATION_INSTALL](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L57) has generated the base chef repository available in /home/vagrant/chef-repo-training.
 
 ```
 cd /home/vagrant
@@ -80,7 +80,7 @@ git config --global user.name "Developer 2"
 vagrant ssh client
 ```
 
-The Vagrant use the CHEF_CLIENT_INSTALL and CHEF_CLIENT_CONFIG to install and configure the client-server. 
+The Vagrant use the [CHEF_CLIENT_INSTALL](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L8) and [CHEF_CLIENT_CONFIG](https://github.com/oswaldderiemaecker/chef-training/blob/master/Vagrantfile#L68) to install and configure the client-server. 
 
 ## Coding our first cookbook on the developer 1 workstation
 
