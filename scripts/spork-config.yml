@@ -1,0 +1,36 @@
+default_environments:
+  - development
+  - staging
+  - production
+environment_groups:
+  qa_group:
+    - staging
+  test_group:
+    - development 
+version_change_threshold: 2
+preserve_constraint_operators: true
+environment_path: "/home/vagrant/chef-repo-training/environments"
+save_environment_locally_on_create: false
+role_path: "/home/vagrant/chef-repo-training/roles"
+custom_plugin_path: "/home/vagrant/chef-repo-training/spork-plugins"
+always_promote_remote: true
+skip_berkshelf: false
+role_match_file_name: true
+role_safe_delete: true
+stdout_diffs: true
+json_options:
+  indent: "    "
+plugins:
+  foodcritic:
+    tags: ['any']
+  git:
+    enabled: true
+    auto_push: true
+    branch: master
+  rubocop:
+    epic_fail: true
+    show_name: false
+    autocorrect: false
+    out_file: <file>
+    sev_level: <C|W|E>
+    lint: false
