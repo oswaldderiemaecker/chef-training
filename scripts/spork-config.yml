@@ -23,6 +23,7 @@ json_options:
 plugins:
   foodcritic:
     tags: ['any']
+    epic_fail: true
   git:
     enabled: true
     auto_push: true

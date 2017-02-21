@@ -6,6 +6,8 @@ The aim of this training is to show how to work in Teams with Chef in multiple e
 
 This training use four vagrants, one chef servers, two developers workstation and one client that we will use to test our cookbooks.
 
+We use [Sporks](https://github.com/jonlives/knife-spork) to set a workflow to work on our cookbooks.
+
 ### Starting and configuring the environments
 
 ```
@@ -53,6 +55,7 @@ git push -u origin master
 cd /home/vagrant/chef-repo-training
 knife spork info
 knife spork environment create production
+knife spork environment create staging
 knife spork environment create development
 
 #### Connecting to the developer2 workstation
