@@ -67,6 +67,8 @@ The Vagrant CHEF_WORKSTATION_INSTALL has generated the base chef repository avai
 ```
 cd /home/vagrant
 git clone git@github.com:oswaldderiemaecker/chef-repo-training.git
+git config --global user.email "developer2@myorganization-e4r5f4.com"
+git config --global user.name "Developer 2"
 ```
 
 #### Conncecting to the client server
