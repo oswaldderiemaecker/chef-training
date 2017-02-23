@@ -59,7 +59,7 @@ CHEF_WORKSTATION_CHEF_REPO_INSTALL = <<-EOF
 #!/bin/sh
 echo "Installing git"
 sudo apt-get update
-sudo apt-get -y install git
+sudo apt-get -y install git docker.io
 echo "Generating chef repo with chef dk"
 chef generate repo chef-repo-training
 echo "Configuring git_ssh.sh script"
@@ -70,7 +70,7 @@ CHEF_WORKSTATION_INSTALL = <<-EOF
 #!/bin/sh
 echo "Installing git"
 sudo apt-get update
-sudo apt-get -y install git
+sudo apt-get -y install git docker.io
 echo "Configuring git_ssh.sh script"
 echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
 EOF
@@ -175,6 +175,10 @@ Vagrant.configure("2") do |config|
       run  "cp -Rpf ./scripts .chef_developer1"
     end
 
+    developer1.vm.provider :virtualbox do |v, override|
+      v.customize ["modifyvm", :id, "--memory", 1024]
+    end
+
     developer1.vm.synced_folder "./.chef_developer1", 
 	                        "/home/vagrant/.chef", 
 				type: "nfs",
@@ -200,6 +204,10 @@ Vagrant.configure("2") do |config|
       info "Copying Developer 2 Key"
       run  "cp -f .chef/developer2/developer2.pem .chef_developer2/developer2.pem" 
       run  "cp -Rpf ./scripts .chef_developer2"
+    end
+
+    developer2.vm.provider :virtualbox do |v, override|
+      v.customize ["modifyvm", :id, "--memory", 1024]
     end
 
     developer2.vm.synced_folder "./.chef_developer2",

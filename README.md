@@ -382,3 +382,29 @@ And tag our version:
 git tag 0.2.0
 git push origin 0.2.0
 ```
+
+Let's get back to our developer 1 workstation and pull the changes made by developer 2:
+
+```
+git pull origin master
+```
+
+# Quality Assurance with kitchen
+
+Open our cookbook .kitchen.yml file and change the vagrant driver to docker:
+
+```
+name: docker
+```
+
+We are going to use docker, so let's install kitchen-docker.
+
+```
+chef gem install kitchen-docker
+```
+
+Test kitchen works:
+```
+kitchen list
+```
+
