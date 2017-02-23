@@ -320,7 +320,7 @@ git pull origin master
 Let's modify the default recipes and add:
 
 ```
-package 'emacs'
+package 'lynx'
 ```
 
 and try to upload our cookbook:
@@ -349,8 +349,10 @@ knife spork check myfirst_cookbook
 Let's upload the cookbook:
 
 ```
-knife cookbook upload myfirst_cookbook
+knife spork upload myfirst_cookbook
 ```
+
+Note: This function works mostly the same as normal knife cookbook upload COOKBOOK except that this automatically freezes cookbooks when you upload them.
 
 Let's pin it to our development environment.
 
@@ -372,7 +374,7 @@ Let's commit all our changes.
 git status
 git add myfirst_cookbook/*
 git add .rubocop.yml
-git commit -m "Adding emacs"
+git commit -m "Adding lynx"
 git push origin master
 ```
 
@@ -408,3 +410,104 @@ Test kitchen works:
 kitchen list
 ```
 
+Let's converge our cookbook:
+
+```
+kitchen converge default-ubuntu-1604
+```
+
+Let's verify our cookbook:
+
+```
+kitchen verify default-ubuntu-1604
+```
+
+The default testing framework used is inspec at http://inspec.io/
+
+Let's add a test:
+
+```
+vi test/smoke/default/default_test.rb
+```
+
+and add:
+
+```
+describe command('vim --help') do
+   its('stdout') { should match (/VIM - Vi IMproved/) }
+end
+```
+
+Let's run kitchen verify:
+
+```
+kitchen verify default-ubuntu-1604
+kitchen login default-ubuntu-1604
+kitchen verify default-centos-72
+```
+
+Using kitchen on your CI:
+
+```
+kitchen test default-ubuntu-1604
+```
+
+### Chef Marketplace
+
+Adding our dependency into our Berksfile.
+
+```
+vi Berksfile
+```
+
+and add:
+
+```
+cookbook 'nginx', '~> 2.7.6'
+```
+
+Downloading our dependency:
+
+```
+knife cookbook site install chef_nginx
+```
+
+Let's add our dependency in our cookbook metadata.rb:
+
+```
+depends 'chef_nginx', '~> 5.0.7'
+```
+
+and use it in our default recipe:
+
+```
+include_recipe 'chef_nginx'
+```
+
+Before going any further, let's test it.
+
+```
+kitchen converge default-ubuntu-1604
+```
+
+It fails, kitchen-docker isn't managing correctly services, let's fix it by using dokken with privileged mode.
+
+```
+cp /vagrant/scripts/.kitchen.yml /home/vagrant/chef-repo-training/cookbooks/myfirst_cookbook 
+cat /home/vagrant/chef-repo-training/cookbooks/myfirst_cookbook/.kitchen.yml
+```
+
+Let's use now kitchen with dokken
+
+```
+kitchen converge default-ubuntu-1604
+kitchen verify default-ubuntu-1604
+```
+
+Our test now fails, let's fix it:
+
+```
+describe port(80) do
+  it { should be_listening }
+end
+```

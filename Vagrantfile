@@ -60,6 +60,8 @@ CHEF_WORKSTATION_CHEF_REPO_INSTALL = <<-EOF
 echo "Installing git"
 sudo apt-get update
 sudo apt-get -y install git docker.io
+echo "Adding vagrant user to docker group"
+sudo gpasswd -a ${USER} docker
 echo "Generating chef repo with chef dk"
 chef generate repo chef-repo-training
 echo "Configuring git_ssh.sh script"
