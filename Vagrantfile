@@ -23,6 +23,7 @@ test -f /opt/chefdk/bin/kitchen || {
   sudo dpkg -i chefdk.deb
   chef verify
   echo 'eval "$(chef shell-init bash)"' >> ~/.bash_profile
+  echo 'export EDITOR=/usr/bin/vim' >> ~/.bash_profile
 }
 EOF
 
@@ -54,13 +55,22 @@ test -d /opt/chef-server || {
 }
 EOF
 
-CHEF_WORKSTATION_INSTALL = <<-EOF
+CHEF_WORKSTATION_CHEF_REPO_INSTALL = <<-EOF
 #!/bin/sh
 echo "Installing git"
 sudo apt-get update
 sudo apt-get -y install git
 echo "Generating chef repo with chef dk"
 chef generate repo chef-repo-training
+echo "Configuring git_ssh.sh script"
+echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
+EOF
+
+CHEF_WORKSTATION_INSTALL = <<-EOF
+#!/bin/sh
+echo "Installing git"
+sudo apt-get update
+sudo apt-get -y install git
 echo "Configuring git_ssh.sh script"
 echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
 EOF
@@ -179,7 +189,7 @@ Vagrant.configure("2") do |config|
     developer1.vm.host_name = "developer1.vagrant.local"
     developer1.hostmanager.aliases = %w(developer1.vagrant.local developer1)
     developer1.vm.provision :shell, :inline => CHEF_DK_INSTALL, privileged: false
-    developer1.vm.provision :shell, :inline => CHEF_WORKSTATION_INSTALL, privileged: false
+    developer1.vm.provision :shell, :inline => CHEF_WORKSTATION_CHEF_REPO_INSTALL, privileged: false
     developer1.vm.provision :shell, :inline => knife_config('developer1')
   end
 
