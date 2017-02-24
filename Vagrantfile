@@ -57,24 +57,28 @@ EOF
 
 CHEF_WORKSTATION_CHEF_REPO_INSTALL = <<-EOF
 #!/bin/sh
-echo "Installing git"
-sudo apt-get update
-sudo apt-get -y install git docker.io
-echo "Adding vagrant user to docker group"
-sudo gpasswd -a ${USER} docker
-echo "Generating chef repo with chef dk"
-chef generate repo chef-repo-training
-echo "Configuring git_ssh.sh script"
-echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
+test -d /home/vagrant/chef-repo-training || {
+  echo "Installing git"
+  sudo apt-get update
+  sudo apt-get -y install git docker.io
+  echo "Adding vagrant user to docker group"
+  sudo gpasswd -a ${USER} docker
+  echo "Generating chef repo with chef dk"
+  chef generate repo chef-repo-training
+  echo "Configuring git_ssh.sh script"
+  echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
+}
 EOF
 
 CHEF_WORKSTATION_INSTALL = <<-EOF
 #!/bin/sh
-echo "Installing git"
-sudo apt-get update
-sudo apt-get -y install git docker.io
-echo "Configuring git_ssh.sh script"
-echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
+test -d /home/vagrant/chef-repo-training || {
+  echo "Installing git"
+  sudo apt-get update
+  sudo apt-get -y install git docker.io
+  echo "Configuring git_ssh.sh script"
+  echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
+}
 EOF
 
 CHEF_CLIENT_CONFIG = <<-EOF

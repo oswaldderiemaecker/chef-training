@@ -511,3 +511,123 @@ describe port(80) do
   it { should be_listening }
 end
 ```
+
+Let's try our centos container:
+
+```
+kitchen converge default-centos-7
+```
+
+It fails because of a missing openssl package, let's add it only for centos platform.
+
+```
+if node['platform'] == 'centos'
+  package 'openssl'
+end
+```
+
+Let's run test-kitchen
+
+```
+kitchen verify
+```
+
+All tests passe on all platform, let's check our cookbook with spork:
+
+```
+knife spork check myfirst_cookbook
+```
+
+All is fine, let's bump and upload our new cookbook with spork.
+
+```
+knife spork bump myfirst_cookbook minor
+knife spork upload myfirst_cookbook
+```
+
+We got an error:
+
+* ERROR: myfirst_cookbook depends on chef_nginx (~> 5.0.7), which is not currently being uploaded and cannot be found on the server!
+
+So let's upload the cookbook.
+
+```
+knife spork upload chef_nginx
+```
+
+We need all its dependencies. So:
+
+```
+knife spork upload compat_resource
+knife spork upload ohai
+knife spork upload windows
+knife spork upload seven_zip
+knife spork upload mingw
+knife spork upload build-essential
+knife spork upload yum-epel
+knife spork upload packagecloud
+knife spork upload runit
+knife spork upload zypper
+knife spork upload chef_nginx
+```
+
+And finally our cookbook:
+
+```
+knife spork upload myfirst_cookbook
+```
+
+Let's promote our new cookbook in development.
+
+```
+knife spork promote development myfirst_cookbook --remote
+cat ../environments/development.json
+```
+
+So our cookbook is on the chef server, lets commit our changes on its repository, but this time, let's assume that you want developer 2 to review the changes before going into staging.
+
+For this we are going to create a branch for this cookbook:
+
+```
+git checkout -B myfirst_cookbook-0.3.0
+```
+
+And commit / push it:
+
+```
+git status
+git add ...
+git commit -m "myfirst_cookbook version 0.3.0"
+git push origin myfirst_cookbook-0.3.0
+```
+
+Goto your GitHub repo, you will see the new branch and a button "Compare & Pull Request".
+
+* Add a Reviewer 
+* Add a Label
+
+Click on **Create a Pull Request**
+
+Developer 2 is now a reviewer of the pull-request.
+
+Developer 2 now review on github the cookbook and verify on his development Workstation if all works fine.
+
+```
+vagrant ssh developer2
+cd /home/vagrant/chef-repo-training
+git pull origin master
+```
+
+On GitHub, at the bottom of the pull request, click command line. Follow the sequence of steps to bring down the proposed pull request.
+
+```
+git fetch origin
+git checkout -b myfirst_cookbook-0.3.0 origin/myfirst_cookbook-0.3.0
+git branch
+cd cookbooks/myfirst_cookbook/
+kitchen list
+kitchen test
+```
+
+Note: You can use -c with kitchen to run in parallel.
+
