@@ -282,7 +282,7 @@ sudo chef-client --environment staging
 sudo chef-client --environment development
 ```
 
-and Freez our cookbook:
+let's upload and freeze our cookbook:
 
 ```
 knife cookbook upload --freeze myfirst_cookbook
@@ -463,7 +463,7 @@ vi Berksfile
 and add:
 
 ```
-cookbook 'nginx', '~> 2.7.6'
+cookbook 'chef_nginx', '~> 5.0.7'
 ```
 
 Downloading our dependency:
@@ -571,6 +571,12 @@ knife spork upload zypper
 knife spork upload chef_nginx
 ```
 
+Alternatively you can use 
+
+```
+berks upload --ssl-verify=false
+```
+
 And finally our cookbook:
 
 ```
@@ -630,4 +636,148 @@ kitchen test
 ```
 
 Note: You can use -c with kitchen to run in parallel.
+
+Everything works fine, you can approve the pull request, click on **Merge Pull Request**, **Confirm Merge** and then **Delete Branch**
+
+Let's promote our cookbook on staging.
+
+```
+git checkout master
+git pull origin master
+knife spork promote staging myfirst_cookbook --remote
+git status
+git commit -m "Promoting myfirst_cookbook 0.3.0 on staging"
+git push origin master
+```
+
+Let's test our cookbook on our client server:
+
+```
+vagrant ssh client
+sudo chef-client --environment staging
+```
+
+Everything ok, let's promote to production.
+
+```
+knife spork promote production myfirst_cookbook --remote
+git status
+git commit -m "Promoting myfirst_cookbook 0.3.0 on production"
+git push origin master
+```
+
+Don't forget to tag:
+
+```
+git tag 0.3.0
+git push origin 0.3.0
+```
+
+### Adding mysql dependency
+
+Let's search for mysql on the Chef Marketplace.
+
+Add mysql in our Berksfile
+
+```
+cookbook 'mariadb', '~> 1.0.1'
+```
+
+Add mysql dependency in our metadata.rb
+
+```
+depends 'mariadb', '~> 1.0.1' 
+```
+
+Add mysql in our default recipe:
+
+```
+include_recipe 'mariadb::default'
+```
+
+Add the inspec test:
+
+```
+describe port(3306) do
+  it { should be_listening }
+end
+```
+
+Test our changes:
+
+```
+kitchen verify
+```
+
+Let's bump our cookbook version:
+
+```
+knife spork bump myfirst_cookbook minor
+```
+
+Let's upload our cookbook dependencies:
+
+```
+berks upload --ssl-verify=false
+```
+
+Let's upload our cookbook:
+```
+knife spork upload myfirst_cookbook
+```
+
+Let's promote it in development:
+
+```
+knife spork promote development myfirst_cookbook --remote
+```
+
+Let's create a new branch and push:
+
+```
+git checkout -B myfirst_cookbook-0.5.0
+
+git status
+git add ...
+git commit -m "myfirst_cookbook version 0.6.0"
+git push origin myfirst_cookbook-0.6.0
+```
+
+Create the pull request.
+
+Connect on the Developr 2 Workstation:
+
+```
+vagrant ssh developer2
+cd /home/vagrant/chef-repo-training
+git pull origin master
+```
+
+```
+git fetch origin
+git checkout -b myfirst_cookbook-0.6.0 origin/myfirst_cookbook-0.6.0
+git branch
+cd cookbooks/myfirst_cookbook/
+kitchen list
+kitchen test
+```
+
+Let's promote on Staging:
+
+```
+git checkout master
+git pull origin master
+knife spork promote staging myfirst_cookbook --remote
+git status
+git add ../../environments/staging.json
+git commit -m "Promoting myfirst_cookbook 0.5.0 on staging"
+git push origin master
+```
+
+Test it on staging:
+
+```
+vagrant ssh client
+sudo chef-client --environment staging
+```
 

@@ -2,8 +2,10 @@
 # vi: set ft=ruby :
 
 # default box when no VAGRANT_BOX / VAGRANT_BOX_URL environment is set
-BOX_NAME = "ubuntu/trusty64"
-BOX_URL  = "https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+#BOX_NAME = "ubuntu/xenial64"
+BOX_NAME = "ubuntu/ubuntu1604"
+#BOX_URL  = "https://atlas.hashicorp.com/ubuntu/boxes/xenial64/versions/20170224.0.0/providers/virtualbox.box"
+BOX_URL  = "https://atlas.hashicorp.com/geerlingguy/boxes/ubuntu1604/versions/1.0.9/providers/virtualbox.box"
 
 CHEF_CLIENT_INSTALL = <<-EOF
 #!/bin/sh
