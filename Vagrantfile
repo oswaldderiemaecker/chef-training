@@ -78,6 +78,8 @@ test -d /home/vagrant/chef-repo-training || {
   echo "Installing git"
   sudo apt-get update
   sudo apt-get -y install git docker.io
+  echo "Adding vagrant user to docker group"
+  sudo gpasswd -a ${USER} docker
   echo "Configuring git_ssh.sh script"
   echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
 }

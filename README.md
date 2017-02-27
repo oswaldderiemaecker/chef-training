@@ -45,7 +45,7 @@ git init
 git config --global user.email "developer1@myorganization-e4r5f4.com"
 git config --global user.name "Developer 1"
 git add README.md
-git commit -m "Initial myorganization chef repot"
+git commit -m "Initial myorganization chef repo"
 git remote add origin git@github.com:oswaldderiemaecker/chef-repo-training.git
 git push -u origin master
 ```
