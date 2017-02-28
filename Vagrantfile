@@ -99,6 +99,7 @@ test -d /home/vagrant/chef-repo-training || {
   echo "Configuring git_ssh.sh script"
   echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
   echo 'export EDITOR=/usr/bin/vim' >> ~/.bash_profile
+  ssh-keygen -N "" -t ssh-rsa -f ~/.ssh/id_rsa_developer1
 }
 EOF
 
@@ -115,7 +116,6 @@ test -d /home/vagrant/chef-repo-training || {
   echo "Configuring git_ssh.sh script"
   echo "export GIT_SSH=/home/vagrant/.chef/scripts/git_ssh.sh" >> ~/.bash_profile 
   echo 'export EDITOR=/usr/bin/vim' >> ~/.bash_profile
-  ssh-keygen -N "" -t ssh-rsa -f ~/.ssh/id_rsa_developer1
   ssh-keygen -N "" -t ssh-rsa -f ~/.ssh/id_rsa_developer2
 }
 EOF
@@ -340,7 +340,7 @@ Vagrant.configure("2") do |config|
     runner.hostmanager.aliases = %w(runner.vagrant.local runner)
     runner.vm.provision :shell, :inline => CHEF_CLIENT_INSTALL
     runner.vm.provision :shell, :inline => knife_config('runner'), privileged: false
-    runner.vm.provision :shell, :inline => CHEF_RUNNER_CONFIG
+    #runner.vm.provision :shell, :inline => CHEF_RUNNER_CONFIG
   end
 
   # Chef Automate
