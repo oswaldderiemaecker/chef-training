@@ -1,3 +1,4 @@
 *.pem
 knife.rb
 .vagrant
+*.local.*

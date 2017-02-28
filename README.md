@@ -680,19 +680,45 @@ Let's search for mysql on the Chef Marketplace.
 Add mysql in our Berksfile
 
 ```
-cookbook 'mariadb', '~> 1.0.1'
+cookbook 'mysql', '~> 8.2.0'
 ```
 
 Add mysql dependency in our metadata.rb
 
 ```
-depends 'mariadb', '~> 1.0.1' 
+depends 'mysql', '~> 8.2.0'
 ```
 
 Add mysql in our default recipe:
 
 ```
-include_recipe 'mariadb::default'
+include_recipe 'myfirst_cookbook::mysql'
+```
+
+And add the mysql recipe:
+
+```
+yum_repository 'mysql-community' do
+  description "MySQL Community"
+  baseurl "http://repo.mysql.com/yum/mysql-5.6-community/el/7/$basearch/"
+  gpgkey 'https://repo.mysql.com/RPM-GPG-KEY-mysql'
+  action :create
+  only_if { node['platform'] == 'centos' }
+end
+
+apt_repository 'mysql-community' do
+  uri 'http://archive.ubuntu.com/ubuntu'
+  distribution 'trusty'
+  components   ['universe']
+  only_if { node['platform'] == 'ubuntu' }
+end
+
+mysql_service 'default' do
+  port '3306'
+  version '5.6'
+  initial_root_password 'password'
+  action [:create, :start]
+end
 ```
 
 Add the inspec test:
@@ -709,21 +735,10 @@ Test our changes:
 kitchen verify
 ```
 
-Let's bump our cookbook version:
-
-```
-knife spork bump myfirst_cookbook minor
-```
-
 Let's upload our cookbook dependencies:
 
 ```
 berks upload --ssl-verify=false
-```
-
-Let's upload our cookbook:
-```
-knife spork upload myfirst_cookbook
 ```
 
 Let's promote it in development:
@@ -765,13 +780,7 @@ kitchen test
 Let's promote on Staging:
 
 ```
-git checkout master
-git pull origin master
 knife spork promote staging myfirst_cookbook --remote
-git status
-git add ../../environments/staging.json
-git commit -m "Promoting myfirst_cookbook 0.5.0 on staging"
-git push origin master
 ```
 
 Test it on staging:
