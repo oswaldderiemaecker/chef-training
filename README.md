@@ -261,7 +261,7 @@ and add:
     "staging": [
       "recipe[myfirst_cookbook]"
     ],
-    "developmnent": [
+    "development": [
       "recipe[myfirst_cookbook]", "recipe[myfirst_cookbook::display_chef_environment]"
     ]
   }
