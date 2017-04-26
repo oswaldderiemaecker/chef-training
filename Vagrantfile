@@ -44,7 +44,7 @@ test -f /opt/chefdk/bin/kitchen || {
   cd /tmp
   curl -L -s 'https://packages.chef.io/files/stable/chefdk/1.1.16/ubuntu/14.04/chefdk_1.1.16-1_amd64.deb' > chefdk.deb 
   sudo dpkg -i chefdk.deb
-  chef verify
+  TERM=xterm-256color chef verify
   echo 'eval "$(chef shell-init bash)"' >> ~/.bash_profile
   echo 'export EDITOR=/usr/bin/vim' >> ~/.bash_profile
 }
@@ -67,10 +67,10 @@ test -d /opt/chef-server || {
     cd /home/vagrant
     sudo chef-server-ctl org-create myorganization "MyOrganization, Inc." --association_user admin -f .chef/myorganization-validator.pem
     sudo rm -f .chef/admin.pem && sudo chef-server-ctl user-create admin admin admin admin@example.com samplepass -f .chef/admin.pem --orgname myorganization 
-    sudo rm -f .chef/developer1/developer1.pem && sudo chef-server-ctl user-create developer1 developer1 developer1 developer1@example.com samplepass -f .chef/developer1/developer1.pem
-    sudo rm -f .chef/developer1/developer2.pem && sudo chef-server-ctl user-create developer2 developer2 developer2 developer2@example.com samplepass -f .chef/developer2/developer2.pem
-    sudo rm -f .chef/client/client.pem && sudo chef-server-ctl user-create client client client client@example.com samplepass -f .chef/client/client.pem
-    sudo rm -f .chef/delivery/delivery.pem && sudo chef-server-ctl user-create delivery delivery delivery delivery@example.com samplepass -f .chef/delivery/delivery.pem
+    sudo rm -f .chef/developer1/developer1.pem && sudo chef-server-ctl user-create developer1 developer1 developer1 developer1@example.com samplepass -f .chef/developer1/developer1.pem --orgname myorganization
+    sudo rm -f .chef/developer1/developer2.pem && sudo chef-server-ctl user-create developer2 developer2 developer2 developer2@example.com samplepass -f .chef/developer2/developer2.pem --orgname myorganization
+    sudo rm -f .chef/client/client.pem && sudo chef-server-ctl user-create client client client client@example.com samplepass -f .chef/client/client.pem --orgname myorganization
+    sudo rm -f .chef/delivery/delivery.pem && sudo chef-server-ctl user-create delivery delivery delivery delivery@example.com samplepass -f .chef/delivery/delivery.pem --orgname myorganization
     sudo chef-server-ctl org-user-add myorganization developer1 -a admin
     sudo chef-server-ctl org-user-add myorganization developer2 -a admin
     sudo chef-server-ctl org-user-add myorganization client -a clients
